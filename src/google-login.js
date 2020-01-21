@@ -58,7 +58,7 @@ const GoogleLogin = props => {
     onRequest,
     prompt
   })
-  const disabled = disabledProp || !loaded
+  const disabled = disabledProp
 
   if (render) {
     return render({ onClick: signIn, disabled })
