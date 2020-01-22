@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import loadScript from './load-script'
 
+let interval = null;
+
 const useGoogleLogin = ({
   onSuccess,
   clientId,
@@ -83,32 +85,45 @@ const useGoogleLogin = ({
       if (responseType === 'code') {
         params.access_type = 'offline'
       }
-      setTimeout(() => {
 
-        console.log('window.gapi', window.gapi, typeof window.gapi.load);
-        window.gapi.load('auth2', () => {
-          console.log('SCRIPT IS LOADED')
 
-          setLoaded(true)
-          if (!window.gapi.auth2.getAuthInstance()) {
-            console.log('getAuthInstance IS false')
+      interval = setInterval(() => {
+        try {
+          if (typeof window.gapi.auth2.getAuthInstance === "function") {
+            clearInterval(interval);
 
-            window.gapi.auth2.init(params).then(
-                res => {
-                  console.log('auth2.init')
-                  if (isSignedIn && res.isSignedIn.get()) {
-                    handleSigninSuccess(res.currentUser.get())
-                  }
-                },
-                err => onFailure(err)
-            )
+            console.log('INTERVAL SCRIPT IS FINALLY LOADED');
+
+            setLoaded(true)
+            if (!window.gapi.auth2.getAuthInstance()) {
+              console.log('getAuthInstance IS false')
+
+              window.gapi.auth2.init(params).then(
+                  res => {
+                    console.log('auth2.init')
+                    if (isSignedIn && res.isSignedIn.get()) {
+                      handleSigninSuccess(res.currentUser.get())
+                    }
+                  },
+                  err => onFailure(err)
+              )
+            }
+            console.log('getAuthInstance IS true')
+            if (autoLoad) {
+              signIn()
+            }
           }
-          console.log('getAuthInstance IS true')
-          if (autoLoad) {
-            signIn()
-          }
-        })
-      }, 1000);
+        } catch(e) {
+          console.log('CATCH', e)
+        }
+      })
+
+      console.log('window.gapi', window.gapi, typeof window.gapi.load);
+      window.gapi.load('auth2', () => {
+        console.log('SCRIPT IS LOADED')
+
+
+      })
     })
   }, [])
 
