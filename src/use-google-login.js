@@ -66,9 +66,6 @@ const useGoogleLogin = ({
 
   useEffect(() => {
     loadScript(document, 'script', 'google-login', jsSrc, () => {
-      console.log('CALL BACK')
-
-
       const params = {
         client_id: clientId,
         cookie_policy: cookiePolicy,
@@ -92,15 +89,10 @@ const useGoogleLogin = ({
           if (typeof window.gapi.auth2.getAuthInstance === "function") {
             clearInterval(interval);
 
-            console.log('INTERVAL SCRIPT IS FINALLY LOADED');
-
             setLoaded(true)
             if (!window.gapi.auth2.getAuthInstance()) {
-              console.log('getAuthInstance IS false')
-
               window.gapi.auth2.init(params).then(
                   res => {
-                    console.log('auth2.init')
                     if (isSignedIn && res.isSignedIn.get()) {
                       handleSigninSuccess(res.currentUser.get())
                     }
@@ -108,22 +100,15 @@ const useGoogleLogin = ({
                   err => onFailure(err)
               )
             }
-            console.log('getAuthInstance IS true')
             if (autoLoad) {
               signIn()
             }
           }
         } catch(e) {
-          console.log('CATCH', e)
         }
       }, 1000)
 
-      console.log('window.gapi', window.gapi, typeof window.gapi.load);
-      window.gapi.load('auth2', () => {
-        console.log('SCRIPT IS LOADED')
-
-
-      })
+      window.gapi.load('auth2', () => {})
     })
   }, [])
 

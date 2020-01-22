@@ -58,9 +58,7 @@ const GoogleLogin = props => {
     onRequest,
     prompt
   })
-  console.log('LOADED', loaded);
-
-  const disabled = disabledProp
+  const disabled = disabledProp || !loaded
 
   if (render) {
     return render({ onClick: signIn, disabled })
@@ -124,6 +122,7 @@ const GoogleLogin = props => {
       onClick: signIn,
       style: defaultStyle,
       type,
+      disabled,
       className
     },
     [
