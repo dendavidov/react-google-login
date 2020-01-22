@@ -122,7 +122,6 @@ const GoogleLogin = props => {
       onClick: signIn,
       style: defaultStyle,
       type,
-      disabled: false,
       className
     },
     [
