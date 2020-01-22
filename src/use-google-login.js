@@ -84,27 +84,28 @@ const useGoogleLogin = ({
       }
 
 
-      interval = setInterval(() => {
-        try {
-          if (typeof window.gapi.auth2.getAuthInstance === "function") {
-            clearInterval(interval);
+      // since window.gapi.load sometimes doesn't call callback
+      // (https://github.com/google/google-api-javascript-client/issues/399)
+      // there is a hacky way to init auth2
 
-            setLoaded(true)
-            if (!window.gapi.auth2.getAuthInstance()) {
-              window.gapi.auth2.init(params).then(
-                  res => {
-                    if (isSignedIn && res.isSignedIn.get()) {
-                      handleSigninSuccess(res.currentUser.get())
-                    }
-                  },
-                  err => onFailure(err)
-              )
-            }
-            if (autoLoad) {
-              signIn()
-            }
+      interval = setInterval(() => {
+        if (window.gapi && window.gapi.auth2 && typeof window.gapi.auth2.getAuthInstance === 'function') {
+          clearInterval(interval);
+
+          setLoaded(true)
+          if (!window.gapi.auth2.getAuthInstance()) {
+            window.gapi.auth2.init(params).then(
+                res => {
+                  if (isSignedIn && res.isSignedIn.get()) {
+                    handleSigninSuccess(res.currentUser.get())
+                  }
+                },
+                err => onFailure(err)
+            )
           }
-        } catch(e) {
+          if (autoLoad) {
+            signIn()
+          }
         }
       }, 1000)
 
