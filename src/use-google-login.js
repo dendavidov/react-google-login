@@ -83,29 +83,30 @@ const useGoogleLogin = ({
       if (responseType === 'code') {
         params.access_type = 'offline'
       }
+      setTimeout(() => {
+        window.gapi.load('auth2', () => {
+          console.log('SCRIPT IS LOADED')
 
-      window.gapi.load('auth2', () => {
-        console.log('SCRIPT IS LOADED')
+          setLoaded(true)
+          if (!window.gapi.auth2.getAuthInstance()) {
+            console.log('getAuthInstance IS false')
 
-        setLoaded(true)
-        if (!window.gapi.auth2.getAuthInstance()) {
-          console.log('getAuthInstance IS false')
-
-          window.gapi.auth2.init(params).then(
-            res => {
-              console.log('auth2.init')
-              if (isSignedIn && res.isSignedIn.get()) {
-                handleSigninSuccess(res.currentUser.get())
-              }
-            },
-            err => onFailure(err)
-          )
-        }
-        console.log('getAuthInstance IS true')
-        if (autoLoad) {
-          signIn()
-        }
-      })
+            window.gapi.auth2.init(params).then(
+                res => {
+                  console.log('auth2.init')
+                  if (isSignedIn && res.isSignedIn.get()) {
+                    handleSigninSuccess(res.currentUser.get())
+                  }
+                },
+                err => onFailure(err)
+            )
+          }
+          console.log('getAuthInstance IS true')
+          if (autoLoad) {
+            signIn()
+          }
+        })
+      }, 1000);
     })
   }, [])
 
