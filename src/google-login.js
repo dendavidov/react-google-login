@@ -58,6 +58,8 @@ const GoogleLogin = props => {
     onRequest,
     prompt
   })
+  console.log('LOADED', loaded);
+
   const disabled = disabledProp
 
   if (render) {
