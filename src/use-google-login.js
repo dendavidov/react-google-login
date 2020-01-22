@@ -84,6 +84,8 @@ const useGoogleLogin = ({
         params.access_type = 'offline'
       }
       setTimeout(() => {
+
+        console.log('window.gapi', window.gapi, typeof window.gapi.load);
         window.gapi.load('auth2', () => {
           console.log('SCRIPT IS LOADED')
 
