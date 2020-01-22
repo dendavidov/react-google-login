@@ -116,7 +116,7 @@ const useGoogleLogin = ({
         } catch(e) {
           console.log('CATCH', e)
         }
-      })
+      }, 1000)
 
       console.log('window.gapi', window.gapi, typeof window.gapi.load);
       window.gapi.load('auth2', () => {
